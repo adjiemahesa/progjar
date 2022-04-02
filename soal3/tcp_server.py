@@ -17,6 +17,7 @@ alldata['7']=dict(nomor=7, nama="casemiro", posisi="gelandang tengah")
 alldata['8']=dict(nomor=8, nama="andreas christensen", posisi="bek tengah kanan")
 alldata['9']=dict(nomor=8, nama="neymar", posisi="penyerang sayap kiri")
 alldata['10']=dict(nomor=9, nama="ousmane dembele", posisi="penyerang sayap kanan")
+
 def versi():
     return "versi 0.0.1"
 
@@ -28,13 +29,13 @@ def proses_request(request_string):
     hasil = None
     try:
         command = cstring[0].strip()
-        if (command == 'getplayerdata'):
+        if (command == 'getdatapemain'):
             # getdata spasi parameter1
             # parameter1 harus berupa nomor pemain
-            playernumber = cstring[1].strip()
-            logging.warning("Request: getplayerdata {}".format(playernumber))
+            nomorpemain = cstring[1].strip()
+            logging.warning("Request: getdatapemain {}".format(nomorpemain))
             try:
-                hasil = alldata[playernumber]
+                hasil = alldata[nomorpemain]
             except:
                 hasil = None
         elif (command == 'versi'):
@@ -113,7 +114,10 @@ def run_server(server_address,is_secure=False):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # Bind the socket to the port
-    logging.warning(f"starting up on {server_address}")
+    if is_secure:
+        logging.warning(f"starting up secure server on {server_address}")
+    else:
+        logging.warning(f"starting up on {server_address}")
     sock.bind(server_address)
     # Listen for incoming connections
     sock.listen(1000)
@@ -131,7 +135,7 @@ if __name__=='__main__':
     try:
         run_server(('0.0.0.0', 12000),is_secure=False)
     except KeyboardInterrupt:
-        logging.warning("Control-C: Program berhenti")
+        logging.warning("Control-C: Program Stop")
         exit(0)
     finally:
-        logging.warning("selesai")
+        logging.warning("Finished")
